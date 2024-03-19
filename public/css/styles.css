@@ -1,0 +1,255 @@
+html, body {
+    min-height: 100%;
+    background-attachment: fixed;
+}
+body::before {
+    content: "";
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: fixed;
+    z-index: -1;   
+}  
+body::after {
+    content: "";
+    background: url('/img/background.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    opacity: 1;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: fixed;
+    z-index: -2;  
+}
+
+nav{
+    height: 50px;
+    backdrop-filter: blur(5px) saturate(148%);
+    -webkit-backdrop-filter: blur(5px) saturate(148%);
+    background-color: rgba(34, 33, 33, 0.4);
+    border-radius: 12px;
+    border: 1px solid rgba(90, 89, 89, 0.753);
+    margin-top: 0 !important;
+}
+
+.button-nav{
+    height: 45px;
+    width: 100px;
+    margin-top: 2px;
+    margin-left: 5px;
+    border-radius: 12px;
+    backdrop-filter: blur(5px) saturate(148%);
+    -webkit-backdrop-filter: blur(5px) saturate(148%);
+    background-color: rgba(158, 158, 158, 0.4);
+    border: 1px solid rgba(150, 150, 150, 0.753);
+    color: white;
+}
+
+.button-nav:hover{
+    backdrop-filter: blur(5px) saturate(148%);
+    -webkit-backdrop-filter: blur(5px) saturate(148%);
+    background-color: rgba(238, 238, 238, 0.4);
+    border: 1px solid rgba(150, 150, 150, 0.753);
+}
+.button-nav:active{
+    backdrop-filter: blur(10px) saturate(148%);
+    -webkit-backdrop-filter: blur(10px) saturate(148%);
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(150, 150, 150, 0.753);
+}
+.button-logout{
+    float: right;
+    margin-right: 5px;
+}
+
+.container{
+    display: flex;
+    align-items: center;
+}
+.div-graf{
+    margin-top: 10px;
+    margin-left: 5px;
+    backdrop-filter: blur(5px) saturate(148%);
+    -webkit-backdrop-filter: blur(5px) saturate(148%);
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.753);
+}
+
+.modal {
+    display: none; /* Oculta el modal por defecto */
+    position: fixed; /* Fija la posición del modal en la pantalla */
+    z-index: 1; /* Asegura que el modal esté por encima de otros elementos */
+    left: 0;
+    top: 0;
+    width: 100%; /* Ocupa todo el ancho de la pantalla */
+    height: 100%; /* Ocupa todo el alto de la pantalla */
+    overflow: auto; /* Permite el desplazamiento si el contenido es más largo que la pantalla */
+    background-color: rgba(0,0,0,0.4); /* Fondo oscuro con transparencia */
+}
+
+/* Estilo para el contenido del modal */
+.modal-content {
+    backdrop-filter: blur(5px) saturate(148%);
+    -webkit-backdrop-filter: blur(5px) saturate(148%);
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.753);
+    margin: 15% auto; /* Centra el modal en la pantalla */
+    padding: 20px;
+    width: 20%; /* Ancho del modal */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+   }
+   
+   /* Estilo para el botón de cerrar */
+.close {
+    margin-top: -20px;
+    color: #3d3d3d;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+   
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.div-form{
+    text-align: center;
+}
+
+.div-input{
+    margin-top: 3px;
+}
+
+
+input,
+select
+{
+    width: 100%;
+    height: 30px;
+    border-radius: 12px;
+    backdrop-filter: blur(5px) saturate(148%);
+    -webkit-backdrop-filter: blur(5px) saturate(148%);
+    background-color: rgba(158, 158, 158, 0);
+    border: 1px solid rgba(150, 150, 150, 0.753);
+    color: black;
+
+}
+input:focus,
+select:focus
+{
+    backdrop-filter: blur(10px) saturate(100%);
+    -webkit-backdrop-filter: blur(10px) saturate(100%);
+    background-color: rgba(255, 255, 255, 0.515);
+    outline-color: rgba(255, 255, 255, 0);
+    
+
+}
+
+select:checked{
+    background-color: transparent;
+}
+
+.div-button-del-graf{
+    text-align: end;
+}
+
+.button-del-graf{
+    height: 35px;
+    width: 60px;
+    margin-top: 2px;
+    margin-left: 5px;
+    border-radius: 12px;
+    backdrop-filter: blur(5px) saturate(148%);
+    -webkit-backdrop-filter: blur(5px) saturate(148%);
+    background-color: rgba(255, 0, 0, 0.4);
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    color: white;
+}
+.button-del-graf:hover{
+    backdrop-filter: blur(5px) saturate(148%);
+    -webkit-backdrop-filter: blur(5px) saturate(148%);
+    background-color: rgba(250, 0, 0, 0.712);
+    border: 1px solid rgba(255, 0, 0, 0.2);
+}
+.button-del-graf:active{
+    backdrop-filter: blur(10px) saturate(148%);
+    -webkit-backdrop-filter: blur(10px) saturate(148%);
+    background-color: rgb(255, 0, 0);
+    border: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+.color{
+    width: 30%;
+}
+.color-opacity{
+    width: 30%;
+    height: auto;
+}
+
+.table {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    margin-top: 50px;
+    align-items: end;
+    text-align: center;
+
+}
+
+.table-content {
+    width: 600px; /* Asegura que la tabla ocupe todo el ancho disponible */
+    border-collapse: collapse; /* Elimina los espacios entre las celdas */
+    margin: 0 auto; /* Centra la tabla */
+    background-color: rgba(255, 255, 255, 0.1); /* Fondo semi-transparente */
+    border-radius: 15px; /* Bordes redondeados */
+    padding: 20px; /* Espaciado interno */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Sombra para efecto de profundidad */
+    backdrop-filter: blur(4px); /* Desenfoque del fondo */
+}
+thead{
+    border-radius: 15px; /* Bordes redondeados */
+}
+
+.table-content th, .table-content td {
+    padding: 12px 15px; /* Espaciado interno de las celdas */
+    text-align: left; /* Alineación del texto */
+}
+
+.table-content th {
+    background-color: #f2f2f2; /* Color de fondo para las cabeceras */
+    color: #333; /* Color del texto */
+}
+
+.table-content tr:nth-child(even) {
+    background-color: #f2f2f2; /* Color de fondo para las filas pares */
+}
+
+.button-table {
+    background-color: #4CAF50; /* Color de fondo del botón */
+    border: none; /* Sin bordes */
+    color: white; /* Color del texto */
+    padding: 5px 10px; /* Espaciado interno */
+    text-align: center; /* Alineación del texto */
+    text-decoration: none; /* Sin decoración */
+    display: inline-block; /* Permite aplicar estilos de bloque */
+    font-size: 16px; /* Tamaño de fuente */
+    margin: 4px 2px; /* Margen */
+    cursor: pointer; /* Cursor de mano al pasar el mouse */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+
+.table-content{
+    margin: 0 auto;
+    align-items: center;
+}

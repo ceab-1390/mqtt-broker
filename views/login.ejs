@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+    <div class="card">
+        <div class="img-login">
+            <img class="img" src="/img/iot.png" alt="">
+        </div>
+        <form class="form-login" action="/login" method="POST">
+            <div class="form-input">
+                <input type="text" name="user" id="user" placeholder="user">
+            </div>
+            <div class="form-input">
+                <input type="password" name="password" id="password" placeholder="password">
+            </div>
+            <div class="form-input">
+                <button class="button-login" type="submit">Login</button>
+            </div>
+        </form>
+    </div>
+<script src="/js/sweetalert2.all.min.js"></script>
+<script>
+(function (){
+    let error = '<%= status.error %>'
+    let message = '<%= status.message %>'
+    console.log(error)
+    if (error != 'false'){
+      Swal.fire({
+        title: 'Error',
+        text: message,
+        icon: 'error'
+      })
+    }
+  })();
+
+</script>
+</body>
+</html>

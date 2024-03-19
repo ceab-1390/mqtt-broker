@@ -1,0 +1,74 @@
+
+    <div class="container" style="display: flex;" id="father"></div>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <div class="card-head">
+          <span class="close">&times;</span>
+        </div>
+         <div class="div-form">
+          <form action="/newGraf" method="POST">
+            <div class="div-input">
+              <select name="type" id="type" onchange="limit(this)">
+                <option selected value="">Selecione el tipo de grafica</option>
+                <% chartsTypes.forEach((type) => {%>
+                  <option  value="<%=type._id%>"> <%=type.chartType%> </option>
+                <%})%>
+              </select>
+            </div>
+            <div class="div-input">
+              <input type="text" name="percent" id="percent" placeholder="Percent" hidden value=''>
+              <input type="text" name="maxValue" id="max" placeholder="MaxValue" hidden value=''>
+            </div>
+            <div class="div-input">
+              <input type="text" name="labels" id="" placeholder="Label">
+            </div>
+            <div class="div-input">
+              <input type="text" name="topic" id="" placeholder="Topic">
+            </div>
+            <div class="div-input">
+              <input type="color" id="color1" class="color" name="backgroundColor1" placeholder="color" value="#00ff1e">
+              <input type="color" id="color2" class="color" name="backgroundColor2" placeholder="color" value="#ff0000">
+              <input type="number" id="opacity" class="color-opacity" name="opacity" max="1" min="0.1"  step="0.1" placeholder="opacity">
+            </div>
+            <div class="div-input">
+              <button class="button-nav" type="submit">enviar</button>
+            </div>
+          </form>
+         </div>
+      </div>
+     </div>
+     
+
+
+<script>
+  (function (){
+    let error = '<%=errors%>'
+    let alert = '<%=alert%>'
+    console.log(alert)
+    let errorUno = ''
+    if (error != ''){
+      Swal.fire({
+      title: 'Error',
+      text: error,
+      icon: 'error',
+    });
+    uriClear();
+    }
+    if (alert != ''){
+      Swal.fire({
+        title: 'Exito',
+        text: alert,
+        icon: 'success'
+      })
+      uriClear()
+    }
+  })();
+
+  function uriClear(){
+    // Extraer la parte de la URL sin los parámetros de error
+    const url = new URL(window.location.href);
+    const cleanUrl = url.origin + url.pathname;
+    // Reemplazar la URL actual con la nueva URL sin los parámetros de error
+    history.replaceState({}, document.title, cleanUrl);
+  }
+</script>
