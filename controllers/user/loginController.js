@@ -1,6 +1,8 @@
 const Bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const model = require('../../model/models');
+const { validationResult } = require('express-validator');
+
 
 const secretJwt = process.env.JWT
 
@@ -21,7 +23,7 @@ module.exports.auth = async (req,res) =>{
             }
             async function setCockie(obj,user){
                 if (!token){
-                    res.render('login',{status:{error: true, message: ""}}) 
+                    res.render('login',{status:{error: true, message: "Usuario o Clave no valida"}, layout: false}) 
                 }else{
                     res.status(200).cookie('authToken',obj,{ maxAge: 3600 * 1000, httpOnly: true } ).redirect('/home')
                 }
@@ -30,7 +32,7 @@ module.exports.auth = async (req,res) =>{
             console.error(new Error(error))
         }
     }else{
-        res.render('login',{status:{error: true, message: "Ingrese usuario y contrasena"}}) 
+        res.render('login',{status:{error: true, message: "Ingrese usuario y contrasena"}, layout: false}) 
     }
 }
 
@@ -40,6 +42,8 @@ module.exports.logOut = (req,res) =>{
 
 module.exports.index = async (req,res) =>{
     let path = req.path
+    const error = req.cookies.error;
+    const exito = req.cookies.exito;
     const groups = await model.Group.getAll();
     let admin = await model.Group.findOne('admin');
     const users = await model.Users.getAll();
@@ -50,5 +54,37 @@ module.exports.index = async (req,res) =>{
             admin = false;
         }
     }
-    res.render('users',{admin,users,path,groups})
+    res.clearCookie('error');
+    res.clearCookie('exito');
+    res.render('users',{admin,users,path,groups,error:error, exito:exito})
+}
+
+module.exports.createUser = async (req,res) => {
+    const errors = validationResult(req)
+    if (req.body.password != req.body.password_v){
+        res.cookie('error', "Las contrasenas no coinciden", { httpOnly: true });
+        return res.redirect('/users');
+    }else if (errors.errors != ''){
+        res.cookie('error', errors.errors[0].msg, { httpOnly: true });
+        return res.redirect('/users');
+    }else{
+        const valid = await model.Users.findOne(req.body.username);
+        if (!valid){
+            req.body.password = Bcrypt.hashSync(req.body.password,10)
+            const newUser = await model.Users.createOne(req.body);
+            res.cookie('exito', 'Se creo el usuario', { httpOnly: true });
+            return res.redirect('/users')
+        }else{
+            res.cookie('error', 'El usuario ya existe', { httpOnly: true });
+            return res.redirect('/users')
+        }
+    }
+    
+}
+
+module.exports.deleteUser = async (req,res) => {
+    let id = req.params.id;
+    let deleted = await model.Users.deleteOne(id);
+    res.cookie('exito', "Se elimino el usuario", { httpOnly: true });
+    return res.redirect('/users'); 
 }

@@ -37,38 +37,25 @@
          </div>
       </div>
      </div>
-     
-
-
-<script>
-  (function (){
-    let error = '<%=errors%>'
-    let alert = '<%=alert%>'
-    console.log(alert)
-    let errorUno = ''
-    if (error != ''){
-      Swal.fire({
-      title: 'Error',
-      text: error,
-      icon: 'error',
-    });
-    uriClear();
-    }
-    if (alert != ''){
-      Swal.fire({
-        title: 'Exito',
-        text: alert,
-        icon: 'success'
-      })
-      uriClear()
-    }
-  })();
-
-  function uriClear(){
-    // Extraer la parte de la URL sin los parámetros de error
-    const url = new URL(window.location.href);
-    const cleanUrl = url.origin + url.pathname;
-    // Reemplazar la URL actual con la nueva URL sin los parámetros de error
-    history.replaceState({}, document.title, cleanUrl);
-  }
-</script>
+     <script>
+      (function (){
+        let error = '<%= error %>'
+        let exito = '<%= exito %>'
+        if (error){
+          console.log(error)
+          Swal.fire({
+            title: 'Error',
+            text: error,
+            icon: 'error'
+          })
+        }
+        if (exito){
+          console.log(exito)
+          Swal.fire({
+            title: 'Exito',
+            text: exito,
+            icon: 'success'
+          })
+        }
+      })();
+     </script>

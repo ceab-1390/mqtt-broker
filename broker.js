@@ -4,6 +4,7 @@ const mqtt_server = require('net').createServer(aedes.handle);
 const {Users} = require('./model/models');
 const {v4} = require('uuid');
 const {socket,clients} = require('./controllers/ws/ws');
+const Bcrypt = require('bcryptjs');
 const port = 1883;
 
 mqtt_server.listen(port, ()=>{
@@ -13,7 +14,8 @@ mqtt_server.listen(port, ()=>{
 //auth
 aedes.authenticate = async (client, username, password, callback)=>{
     const usuario = await Users.findOne(username);
-    if (!usuario || usuario.password !== String(password)){
+    let pass = Bcrypt.compareSync(String(password),usuario.password);
+    if (!usuario || !pass ){
         console.log('Usuario o clave invalida');
         return callback(null,false)
     }else{

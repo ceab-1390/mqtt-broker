@@ -25,7 +25,6 @@ getData().then((charts)=>{
   let graficas = {};
   let ctx = {};
 
-
   Object.values(charts).forEach(chart => {
     div2[chart._id] = document.createElement('div');
     div2[chart._id].setAttribute('id',chart._id);
@@ -144,7 +143,40 @@ getData().then((charts)=>{
         line[chart._id].data.datasets[0].backgroundColor = chart.backgroundColor
         graficas[chart._id] = new Chart(ctx[chart._id], line[chart._id]);
       break;
-    
+      case 'pie' :
+        dona[chart._id] =  {
+          type: 'pie',
+          data: {
+            labels: [],
+            datasets: [{
+              label: [],
+              data: [],
+              borderWidth: 1,
+              backgroundColor: []
+            }]
+          },
+          options: {
+            plugins:{ 
+              tooltip: {
+                  enabled: true,
+                  callbacks:{
+                    label: function (context){
+                      if (context.dataIndex === 0){
+                        return context.dataset.label + ': ' + context.parsed;
+                      }else{
+                        return null;
+                      }
+                    }
+                  }, 
+                },
+              arrowPlugin: { value: .10 },
+            },
+          },
+        }
+        dona[chart._id].data.labels = [chart.labels]
+        dona[chart._id].data.datasets[0].backgroundColor = chart.backgroundColor
+        graficas[chart._id] = new Chart(ctx[chart._id], dona[chart._id])
+      break;
     }
   });
   let labelLine = 0
@@ -172,6 +204,9 @@ getData().then((charts)=>{
             graficas[chart._id].data.labels.push(labelLine)
             graficas[chart._id].data.datasets[0].data.push([data.data]);
             labelLine += 1
+          break;
+          case 'pie':
+            graficas[chart._id].data.datasets[0].data = [data.data,chart.percent]
           break;
           default :
             if (data.data > chart.maxValue){
@@ -251,7 +286,7 @@ function limit(obj){
   let index = obj.options.selectedIndex;
   let opc = obj.options[index].innerHTML.trim();
   console.log(opc)
-  if ( opc == 'midDoughnut'){
+  if ( opc == 'midDoughnut' || opc == 'pie'){
     percent.hidden = false;
     max.hidden = true;
   }else{
@@ -260,3 +295,6 @@ function limit(obj){
   }
 }
 
+///////Alertas
+
+//////Alertas

@@ -5,6 +5,8 @@ const { validationResult } = require('express-validator');
 
 
 module.exports.index = async (req,res) =>{
+    const error = req.cookies.error;
+    const exito = req.cookies.exito;
     let path = req.path 
     const chartsTypes = await ChartsType.getAll();
     const groups = await Group.getAll();
@@ -16,10 +18,9 @@ module.exports.index = async (req,res) =>{
             admin = false;
         }
     }
-  
-    const errors = req.query.error ? [req.query.error] : [];
-    const alert = req.query.exito ? [req.query.exito] : [];
-    res.render('index',{chartsTypes,groups,admin,path,errors,alert})
+    res.clearCookie('error');
+    res.clearCookie('exito');
+    res.render('index',{chartsTypes,groups,admin,path,error,exito})
 }
 
 module.exports.getAll = async (req,res)=>{
@@ -31,11 +32,8 @@ module.exports.getAll = async (req,res)=>{
 module.exports.newGraf = async (req,res) =>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const firstError = errors.array()[0];
-        const queryString = `error=${encodeURIComponent(firstError.msg)}`;
-        //const queryString = errors.array().map(error => `error=${encodeURIComponent(error.msg)}`).join('&');
-        return res.redirect(`/home?${queryString}`);
-        //return res.status(400).json({ errors: errors.array() });
+        res.cookie('error', errors.errors[0].msg, { httpOnly: true });
+        return res.redirect('/home');
      }
     let data = req.body;
     data.userId = req.session.user
@@ -61,8 +59,8 @@ module.exports.newGraf = async (req,res) =>{
     delete data.backgroundColor2;
     let save = await Chart.createOne(data);
     if (save){
-        queryString = `exito=${encodeURIComponent('Se creo la grafica con exito')}`
-        res.redirect(`/home?${queryString}`)
+        res.cookie('exito', 'Se creo la grafica con exito', { httpOnly: true });
+        return res.redirect('/home');
     }
     
 }

@@ -1,4 +1,5 @@
 require('./db');
+require('dotenv').config()
 const { mongo, default: mongoose, Schema, model, isObjectIdOrHexString } = require('mongoose');
 const Bcrypt = require('bcryptjs');
 //esquema para grupos
@@ -174,7 +175,7 @@ class ChartsType{
     }
     static async findOne(obj){
         try {
-            const type = await chartTypeModel.findOne({type:obj});
+            const type = await chartTypeModel.findOne({chartType:obj});
             return type
         } catch (error) {
             console.error(new Error(error));
@@ -201,21 +202,23 @@ class Group{
     }
 }
 
-/*data = [
-    {"chartType" : "doughnut"},
-    {"chartType" : "bar"},
-    {"chartType" : "line"},
-    {"chartType" : "pie"},
-]
-
+data = JSON.parse(process.env.CHARTS_TYPES)
 async function create(){
-    
-    d = await chartTypeModel.insertMany(data);
+    data.forEach(async element => {
+        let valid = await ChartsType.findOne(element.chartType);
+        if (valid == null){
+            let newType = await chartTypeModel(element);
+            newType.save()
+        }else{
+            console.info('Ya existe el tipo de grafica: '+element.chartType)
+        }
+    });
+    //d = await chartTypeModel.insertMany(data);
     //r = await Charts.deleteOne(d)
-    console.log(d)
+    //console.log(d)
 }
 
-create();*/
+create();
 
 const groups = [
     {group: 'admin'},

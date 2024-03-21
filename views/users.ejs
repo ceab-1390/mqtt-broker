@@ -9,14 +9,14 @@
             <th>acction</th>
         </thead>
         <tbody>
+          <% users.forEach((user,index) => {%>
             <tr>
-                <% users.forEach((user,index) => {%>
-                    <td> <%=index += 1 %> </td>
-                    <td> <%=user.username%> </td>
-                    <td> <%=user.group.group%> </td>
-                    <td><button type="button" class="button-table">Eliminar</button></td>
-                <%})%>
+                <td> <%=index += 1 %> </td>
+                <td> <%=user.username%> </td>
+                <td> <%=user.group.group%> </td>
+                <td><a href="/delUser/<%=user._id%>"><button type="button" class="button-del-graf">Eliminar</button></a></td>
             </tr>
+          <%})%>
         </tbody>
     </table>
 </div>
@@ -29,7 +29,7 @@
        <div class="div-form">
         <form action="#" method="POST">
           <div class="div-input">
-            <select name="type" id="type">
+            <select name="group" id="type">
               <option selected value="">Selecione el tipo de usuario</option>
                 <%groups.forEach(group =>{%>
                     <option value="<%=group._id%>"><%=group.group%></option>
@@ -43,9 +43,7 @@
             <input type="password" name="password" id="" placeholder="Password">
           </div>
           <div class="div-input">
-            <input type="color" id="color1" class="color" name="backgroundColor1" placeholder="color" value="#00ff1e">
-            <input type="color" id="color2" class="color" name="backgroundColor2" placeholder="color" value="#ff0000">
-            <input type="number" id="opacity" class="color-opacity" name="opacity" max="1" min="0.1"  step="0.1" placeholder="opacity">
+            <input type="password" name="password_v" id="" placeholder="Repeat Password">
           </div>
           <div class="div-input">
             <button class="button-nav" type="submit">enviar</button>
@@ -54,3 +52,26 @@
        </div>
     </div>
    </div>
+
+<script>
+  (function (){
+  let error = '<%= error %>'
+  let exito = '<%= exito %>'
+  if (error){
+    console.log(error)
+    Swal.fire({
+      title: 'Error',
+      text: error,
+      icon: 'error'
+    })
+  }
+  if (exito){
+    console.log(exito)
+    Swal.fire({
+      title: 'Exito',
+      text: exito,
+      icon: 'success'
+    })
+  }
+})();
+</script>

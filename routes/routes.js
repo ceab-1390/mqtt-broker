@@ -19,15 +19,22 @@ const chartValidationRules = [
  check('opacity').matches(/^(\d+(\.\d+)?)?$/).withMessage('La opacidad solo debe ser numérica')
 ];
 
-let test = 'line'
+const userValidationRules = [
+   check('group').notEmpty().withMessage('Debe seleccionar el tipo de usuario'),
+   check('username').notEmpty().withMessage('Debe ingresar el nombre de usuario'),
+   check('password').notEmpty().withMessage('Debe ingresar la contrasena'),
+]
+
 
 router.get('/',user.login);
 router.post('/login',user.auth);
 router.get('/home',midleware.auth,charts.index)
 router.get('/charts_data', charts.getAll);
-router.post('/newGraf', chartValidationRules, charts.newGraf);
+router.post('/newGraf', midleware.auth,chartValidationRules, charts.newGraf);
 router.post('/delGraf', charts.delGraf);
 
 router.get('/users', midleware.auth,user.index);
+router.post('/users',midleware.auth,userValidationRules,user.createUser);
+router.get('/delUser/:id',midleware.auth,user.deleteUser);
 
 module.exports = router

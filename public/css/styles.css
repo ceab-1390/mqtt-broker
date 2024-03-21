@@ -69,6 +69,7 @@ nav{
 
 .container{
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
 }
 .div-graf{
@@ -203,7 +204,7 @@ select:checked{
     margin-top: 50px;
     align-items: end;
     text-align: center;
-
+    overflow: hidden;
 }
 
 .table-content {
@@ -215,41 +216,28 @@ select:checked{
     padding: 20px; /* Espaciado interno */
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Sombra para efecto de profundidad */
     backdrop-filter: blur(4px); /* Desenfoque del fondo */
+    overflow: hidden;
 }
 thead{
     border-radius: 15px; /* Bordes redondeados */
 }
 
 .table-content th, .table-content td {
+    
     padding: 12px 15px; /* Espaciado interno de las celdas */
     text-align: left; /* Alineación del texto */
 }
 
 .table-content th {
-    background-color: #f2f2f2; /* Color de fondo para las cabeceras */
-    color: #333; /* Color del texto */
+    backdrop-filter: blur(5px) saturate(148%);
+    -webkit-backdrop-filter: blur(5px) saturate(148%);
+    background-color: #00000085; /* Color de fondo para las cabeceras */
+    color: #fffdfd; /* Color del texto */
 }
 
 .table-content tr:nth-child(even) {
-    background-color: #f2f2f2; /* Color de fondo para las filas pares */
-}
-
-.button-table {
-    background-color: #4CAF50; /* Color de fondo del botón */
-    border: none; /* Sin bordes */
-    color: white; /* Color del texto */
-    padding: 5px 10px; /* Espaciado interno */
-    text-align: center; /* Alineación del texto */
-    text-decoration: none; /* Sin decoración */
-    display: inline-block; /* Permite aplicar estilos de bloque */
-    font-size: 16px; /* Tamaño de fuente */
-    margin: 4px 2px; /* Margen */
-    cursor: pointer; /* Cursor de mano al pasar el mouse */
-    border-radius: 5px; /* Bordes redondeados */
-}
-
-
-.table-content{
-    margin: 0 auto;
-    align-items: center;
+    backdrop-filter: blur(5px) saturate(148%);
+    -webkit-backdrop-filter: blur(5px) saturate(148%);
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.753);
 }
