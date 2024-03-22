@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const expressLayouts = require('express-ejs-layouts');
+const cors = require('cors');
 
 app.use(session({
     secret: process.env.SECRET,
@@ -21,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(expressLayouts);
-
+//app.use(cors());
 app.set('view engine', 'ejs');
 app.set('views', './views');
 

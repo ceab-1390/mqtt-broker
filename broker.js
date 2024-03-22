@@ -10,11 +10,15 @@ const port = 1883;
 mqtt_server.listen(port, ()=>{
     console.log('listen on: '+port);
 })
-
+let pass = false;
 //auth
 aedes.authenticate = async (client, username, password, callback)=>{
     const usuario = await Users.findOne(username);
-    let pass = Bcrypt.compareSync(String(password),usuario.password);
+    if (usuario){
+        pass = Bcrypt.compareSync(String(password),usuario.password);
+    }else{
+        pass = false;
+    }
     if (!usuario || !pass ){
         console.log('Usuario o clave invalida');
         return callback(null,false)

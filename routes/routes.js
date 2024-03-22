@@ -5,6 +5,7 @@ const charts = require('../controllers/charts/chartController')
 const { check, validationResult } = require('express-validator');
 const midleware = require('../midleware/auth');
 const user = require('../controllers/user/loginController')
+const control = require('../controllers/control/controlController');
 
 const chartValidationRules = [
  check('type').notEmpty().withMessage('Debe seleccionar el tipo de grafico'),
@@ -36,5 +37,7 @@ router.post('/delGraf', charts.delGraf);
 router.get('/users', midleware.auth,user.index);
 router.post('/users',midleware.auth,userValidationRules,user.createUser);
 router.get('/delUser/:id',midleware.auth,user.deleteUser);
+
+router.get('/control',midleware.auth,control.index);
 
 module.exports = router

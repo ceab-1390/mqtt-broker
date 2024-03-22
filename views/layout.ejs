@@ -22,6 +22,13 @@
         <%if (path == '/users'){%>
             <button type="button" class="button-nav togle-modal">Nuevo usuario</button>
         <%}%>
+        <%if (path == '/control'){%>
+            <button type="button" class="button-nav togle-modal">Nuevo control</button>
+        <%}%>
+        <%if (path != '/control'){%>
+            <a href="/control"><button type="button" class="button-nav togle-modal">Controles</button></a>
+        <%}%>
+
       <a href="/"><button type="button" class="button-nav button-logout">Salir</button></a>
     </nav>
     <div class="alert"></div>
