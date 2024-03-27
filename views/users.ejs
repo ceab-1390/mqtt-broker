@@ -1,7 +1,7 @@
 
 
 <div class="table">
-    <table class="table-content">
+    <table class="table-content striped">
         <thead>
             <th>#</th>
             <th>Username</th>
@@ -14,17 +14,17 @@
                 <td> <%=index += 1 %> </td>
                 <td> <%=user.username%> </td>
                 <td> <%=user.group.group%> </td>
-                <td><a href="/delUser/<%=user._id%>"><button type="button" class="button-del-graf">Eliminar</button></a></td>
+                <td><a href="/delUser/<%=user._id%>"><button type="button" class="button-del-graf btn-floating btn-large waves-effect waves-light red btn-small">-</button></a></td>
             </tr>
           <%})%>
         </tbody>
     </table>
 </div>
 
-<div id="myModal" class="modal">
+<div id="modal1" class="modal">
     <div class="modal-content">
       <div class="card-head">
-        <span class="close">&times;</span>
+        <span class="close"><a href="#!" class="modal-close btn-flat-right close">&times;</a></span>
       </div>
        <div class="div-form">
         <form action="#" method="POST">
@@ -37,13 +37,13 @@
             </select>
           </div>
           <div class="div-input">
-            <input type="text" name="username" id="" placeholder="Username">
+            <input type="text" name="username" id="name" placeholder="Username">
           </div>
           <div class="div-input">
-            <input type="password" name="password" id="" placeholder="Password">
+            <input type="password" name="password" id="pass" placeholder="Password">
           </div>
           <div class="div-input">
-            <input type="password" name="password_v" id="" placeholder="Repeat Password">
+            <input type="password" name="password_v" id="pass_v" placeholder="Repeat Password">
           </div>
           <div class="div-input">
             <button class="button-nav" type="submit">enviar</button>

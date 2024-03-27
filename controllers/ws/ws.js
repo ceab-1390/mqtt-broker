@@ -2,12 +2,16 @@ require('dotenv').config()
 const { stdin } = require('process');
 const {WebSocket} = require('ws'); 
 const {v4: uuidv4} = require('uuid');
+const emisor = require('events');
+class emitComand extends emisor {};
+const sendComand = new emitComand();
 
 const socket = new WebSocket.Server({port: process.env.WS_PORT},()=>{
     console.log('WebSocket start on '+process.env.WS_PORT)
 })
 
 const clients = {};
+const comand = {};
 
 socket.on('connection', (ws,req) =>{
     const clientId = uuidv4();
@@ -18,8 +22,10 @@ socket.on('connection', (ws,req) =>{
         console.log('Conexion del cliente ' +clientId+' cerrada');
     });
     ws.on('message', data =>{
-        console.log('Mensaje del cliente ID: '+clientId+ ': '+data );
-        console.log('Respuesta: ')
+        data = JSON.parse(data);
+        if (data.type == 'command'){
+            sendComand.emit('command',data);
+        }
     });
     ws.onerror = function (){
         console.log('Error ws')
@@ -28,4 +34,4 @@ socket.on('connection', (ws,req) =>{
 
 
 
-module.exports = {socket,clients}
+module.exports = {socket,clients,sendComand}

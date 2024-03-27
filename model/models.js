@@ -38,7 +38,7 @@ const chartTypeScchema = new mongoose.Schema({
         unique: true,
     }
 })
-const chartTypeModel = mongoose.model('ChartType',chartTypeScchema);
+const chartTypeModel = new mongoose.model('ChartType',chartTypeScchema);
 
 //esquema para las graficas
 const chartScchema = new mongoose.Schema({
@@ -80,7 +80,45 @@ const chartScchema = new mongoose.Schema({
         ref: UserModel,
     },
 })
-const ChartModel = mongoose.model('Chart',chartScchema);
+const ChartModel = new mongoose.model('Chart',chartScchema);
+
+const deviceSchema = new mongoose.Schema({
+    name:{
+        type: String,
+    },
+    mac:{
+        type: String,
+        unique: true
+    },
+    userId:{ 
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: UserModel,
+    },
+
+});
+const DeviceModel = new mongoose.model('Devices', deviceSchema);
+
+const controlSchema = new mongoose.Schema({
+    deviceId: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: DeviceModel,
+    },
+    buttons: {
+        type: Array,
+        required: true,
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    topic: {
+        type: String,
+        default: 'command'
+    }
+});
+const ControlModel = new mongoose.model('Controls',controlSchema);
 
 class Users{
     static async findOne(username){
@@ -131,7 +169,7 @@ class Users{
         }
     }
 
-}
+};
 
 class Chart{
     static async getAll(userId){
@@ -162,7 +200,7 @@ class Chart{
             return false        
         }
     }
-}
+};
 
 class ChartsType{
     static async getAll(){
@@ -181,7 +219,7 @@ class ChartsType{
             console.error(new Error(error));
         }
     }
-}
+};
 
 class Group{
     static async findOne(obj){
@@ -201,6 +239,89 @@ class Group{
         }
     }
 }
+
+class Device{
+    static async getAll(userId){
+        try {
+            let all = await DeviceModel.find({userId:userId});
+            return all;
+        } catch (error) {
+            console.error(new Error(error));
+        }
+    }
+
+    static async createOne(data){
+        try {
+            let valid = await DeviceModel.findOne({mac:data.mac})
+            if (!valid){
+                let newDevice = await DeviceModel(data);
+                await newDevice.save() 
+                return newDevice;
+            }else{
+                return false;
+            }
+     
+        } catch (error) {
+            console.error(new Error(error));
+            return false;
+        }
+    };
+};
+
+class Control{
+    static async getAll(userId) {
+        try {
+            const id = new mongoose.Types.ObjectId(userId);
+            const all = await ControlModel.aggregate([
+                {
+                    $lookup:{
+                        from: "devices",
+                        localField: "deviceId",
+                        foreignField: "_id",
+                        as: "controlInfo"
+                    }
+                },
+                {
+                    $unwind: "$controlInfo"
+                },
+                {
+                    $match:{
+                        "controlInfo.userId" : id
+                    }
+                },
+                {
+                    $project:{
+                        controlInfo: 0
+                    }
+                }
+ 
+            ]);
+            return all;
+        } catch (error) {
+            console.error(new Error(error));
+        }
+    }
+
+    // static async getAll(userId){
+    //     try {
+    //         const all = await ControlModel.find({userId:userId});
+    //         return all;
+    //     } catch (error) {
+    //         console.error(new Error(error));
+    //     }
+    // }
+
+    static async createOne(data){
+        try {
+            const newControl = await ControlModel(data);
+            await newControl.save();
+            return newControl;
+        } catch (error) {
+            console.error(new Error(error));
+            return false;
+        }
+    }
+};
 
 data = JSON.parse(process.env.CHARTS_TYPES)
 async function create(){
@@ -260,4 +381,4 @@ createGroup(groups).then(()=>{
 
 
 
-module.exports = {Users,Chart,ChartsType,Group}
+module.exports = {Users,Chart,ChartsType,Group,Control,Device}

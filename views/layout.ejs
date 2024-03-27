@@ -6,30 +6,33 @@
     <script src="/js/chart.js"></script>
     <title>HOME</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/materialize.css">
+    <script src="/js/materialize.js"></script>
 </head>
 <body>
     <script src="/js/sweetalert2.all.min.js"></script>
     <nav class="navbar"> 
         <%if (path != '/home'){%>
-            <a href="/home"><button type="button" class="button-nav ">Home</button></a>
+            <a href="/home"><button type="button" class="button-nav  btn waves-effect grey waves-light">Home</button></a>
         <%}%>
         <%if (path == '/home'){%>
-            <button type="button" class="button-nav togle-modal">Nueva grafica</button>
+            <button type="button" data-target="modal1" class="button-nav  btn waves-effect waves-light grey modal-trigger">Nueva grafica</button>
         <%}%>
         <%if (admin && path != '/users'){%>
-            <a href="/users"><button type="button" class="button-nav">Usuarios</button></a>
+            <a href="/users"><button type="button" class="button-nav btn grey waves-effect waves-light">Usuarios</button></a>
         <%}%>
         <%if (path == '/users'){%>
-            <button type="button" class="button-nav togle-modal">Nuevo usuario</button>
+            <button type="button" data-target="modal1" class="button-nav modal-trigger btn grey waves-effect waves-light">Nuevo usuario</button>
         <%}%>
         <%if (path == '/control'){%>
-            <button type="button" class="button-nav togle-modal">Nuevo control</button>
+            <button type="button" data-target="modal1" class="button-nav modal-trigger btn grey waves-effect waves-light">Nuevo control</button>
         <%}%>
         <%if (path != '/control'){%>
-            <a href="/control"><button type="button" class="button-nav togle-modal">Controles</button></a>
+            <a href="/control"><button type="button" class="button-nav grey  btn waves-effect waves-light">Controles</button></a>
         <%}%>
 
-      <a href="/"><button type="button" class="button-nav button-logout">Salir</button></a>
+      <a href="/"><button type="button" class="button-nav grey button-logout btn waves-effect waves-light">Salir</button></a>
+
     </nav>
     <div class="alert"></div>
     <div class="container-body">

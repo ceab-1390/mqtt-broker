@@ -29,10 +29,12 @@ app.set('views', './views');
 app.use(routes)
 app.use('/public', express.static(__dirname + '/public'));
 app.use('/css', express.static(__dirname + '/public/css'));
+app.use('/css', express.static(__dirname + '/node_modules/materialize-css/dist/css' ))
 app.use('/img', express.static(__dirname + '/public/img'));
 app.use('/js', express.static(__dirname + '/node_modules/chart.js/dist'))
 app.use('/js', express.static(__dirname + '/public/js'))
 app.use('/js', express.static(__dirname + '/node_modules/sweetalert2/dist'))
+app.use('/js', express.static(__dirname + '/node_modules/materialize-css/dist/js'))
 
 
 

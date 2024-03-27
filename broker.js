@@ -1,11 +1,12 @@
 require('dotenv').config()
 const aedes = require('aedes')();
 const mqtt_server = require('net').createServer(aedes.handle);
-const {Users} = require('./model/models');
+const {Users,Control,Device} = require('./model/models');
 const {v4} = require('uuid');
-const {socket,clients} = require('./controllers/ws/ws');
+const {socket,clients,sendComand} = require('./controllers/ws/ws');
 const Bcrypt = require('bcryptjs');
 const port = 1883;
+
 
 mqtt_server.listen(port, ()=>{
     console.log('listen on: '+port);
@@ -40,28 +41,31 @@ aedes.on('client',(client,a,b,c)=>{
     //console.log(client.id)
 });
 
-aedes.on('publish', (packet,client)=>{
+aedes.on('publish',async (packet,client)=>{
     if (!packet.topic.startsWith('$SYS')){
-  
+        
+        if (packet.topic == 'config'){
+            let config = {};
+            config = JSON.parse(packet.payload.toString())
+            if (config.topic == 'config'){
+                let dataDevice = config.data
+                let userId = await Users.findOne(dataDevice.user);
+                userId = userId.id;
+                dataDevice.userId = userId;
+                //console.log(dataDevice)
+                let device = await Device.createOne(dataDevice);
+                if (device){
+                    console.log("Se registro un nuevo dispositivo: "+dataDevice.name)
+                }
+            }
+        }else if (packet.topic == 'command' && packet.payload != ''){
+            console.log('Comando')
+        }else if(packet.payload != ''){
         temp = packet.payload.toString()
         Object.values(clients).forEach(client => {
             client.send(temp);
         });
-        /*if (temp.startsWith('act')){
-            console.log('Se envio la accion: '+temp);
-        }else if (!isNaN(Number(temp))){
-            const message = temp.toString().trim(); // Elimina los saltos de línea
-            Object.values(clients).forEach(client => {
-                client.send(message);
-            });
-            /*if (temp >= 50){
-                console.log('Alta temperatura');
-                the_action = 'act_1'
-                run_action(packet,the_action);
-            }*/
-
-
-        //}
+        }
     }
 
 });
@@ -70,7 +74,12 @@ aedes.on('disconnect', (client) => {
     //console.log('Cliente desconectado: ' + client.id);
 });
 
+sendComand.on('command', async (command)=>{
+    await aedes.publish({topic:'command',payload: command.comand});
+})
+
 function run_action(packet,the_action){
-    aedes.publish({topic: packet.topic, payload : the_action})
-    
+    aedes.publish({topic: packet.topic, payload : the_action});
 }
+
+

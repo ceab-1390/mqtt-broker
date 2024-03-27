@@ -39,5 +39,7 @@ router.post('/users',midleware.auth,userValidationRules,user.createUser);
 router.get('/delUser/:id',midleware.auth,user.deleteUser);
 
 router.get('/control',midleware.auth,control.index);
+router.get('/controls_data',control.controls_data);
+router.post('/newControl', midleware.auth,control.newControl);
 
 module.exports = router
