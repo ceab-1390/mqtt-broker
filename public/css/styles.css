@@ -96,16 +96,27 @@ nav{
 .container-p{
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    /* align-items: end; */
+    /* justify-content: space-between; */
+    /* gap: 10px; */
 }
+
+.container-c{
+    display: flex;
+    flex-wrap: wrap;
+    /* align-items: end; */
+    justify-content: space-between;
+    gap: 10px;
+}
+
 .div-graf{
-    margin-top: 10px;
-    margin-left: 5px;
-    backdrop-filter: blur(5px) saturate(148%);
-    -webkit-backdrop-filter: blur(5px) saturate(148%);
-    background-color: rgba(255, 255, 255, 0.4);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.753);
+    margin-top: 10px !important;
+    margin-left: 5px !important;
+    backdrop-filter: blur(5px) saturate(148%) !important;
+    -webkit-backdrop-filter: blur(5px) saturate(148%) !important;
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.753) !important;
 }
 .div-control {
     display: flex;
@@ -293,6 +304,7 @@ thead{
 
 
 .controlTitle{
+    margin-top: 1px;
     text-transform: uppercase;
     font-style: italic;
     font-size: 25px !important;
@@ -304,4 +316,34 @@ thead{
     margin-top: 5px;
     height: 80px !important;
     width: 80px !important;
+    text-align: center;
+}
+
+.btnVol{
+    display: flex;
+    flex-wrap: wrap;
+    height: 20px !important;
+    margin-top: 30px !important;
+    text-align: center;
+}
+
+.labelRange{
+    display: flex;
+    margin-top: -15px !important;
+    margin-left: 15px !important;
+    color: white;
+    font-size: 15px !important;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.swal2-container .select-wrapper{
+    display: none;
+}
+.swal2-container .swal2-popup.swal2-modal.swal2-icon-error.swal2-show{
+    backdrop-filter: blur(5px) saturate(148%) !important;
+    -webkit-backdrop-filter: blur(5px) saturate(148%) !important;
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.753) !important;
 }

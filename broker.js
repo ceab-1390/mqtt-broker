@@ -5,6 +5,7 @@ const {Users,Control,Device} = require('./model/models');
 const {v4} = require('uuid');
 const {socket,clients,sendComand} = require('./controllers/ws/ws');
 const Bcrypt = require('bcryptjs');
+const { json } = require('body-parser');
 const port = 1883;
 
 
@@ -58,13 +59,20 @@ aedes.on('publish',async (packet,client)=>{
                     console.log("Se registro un nuevo dispositivo: "+dataDevice.name)
                 }
             }
-        }else if (packet.topic == 'command' && packet.payload != ''){
-            console.log('Comando')
-        }else if(packet.payload != ''){
-        temp = packet.payload.toString()
-        Object.values(clients).forEach(client => {
-            client.send(temp);
-        });
+        }else if(packet.topic == 'buttonStatus'){
+            statusButton = packet.payload.toString();
+            Object.values(clients).forEach(client => {
+                if (client.path == '/control'){
+                    client.send(statusButton);
+                }
+            });
+        }else if(packet.payload != '' && packet.topic != 'command'){
+            value = packet.payload.toString()
+            Object.values(clients).forEach(client => {
+                if (client.path == '/home'){
+                    client.send(value);
+                }
+            });
         }
     }
 
@@ -75,7 +83,23 @@ aedes.on('disconnect', (client) => {
 });
 
 sendComand.on('command', async (command)=>{
-    await aedes.publish({topic:'command',payload: command.comand});
+    //console.log(command)
+    let device = await Device.findOne(command.deviceId)
+    let message = {};
+    if (device){
+        message.mac = device.mac;
+        message.data = command.comand;
+        if(command.range){
+            message.range = true;
+            message.rangeValue = command.value;
+        }else{
+            message.range = false;
+        }
+        message = JSON.stringify(message)
+        await aedes.publish({topic:'comand',payload: message});
+        console.log(message);
+    }
+
 })
 
 function run_action(packet,the_action){

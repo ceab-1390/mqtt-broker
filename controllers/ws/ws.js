@@ -23,8 +23,13 @@ socket.on('connection', (ws,req) =>{
     });
     ws.on('message', data =>{
         data = JSON.parse(data);
-        if (data.type == 'command'){
-            sendComand.emit('command',data);
+        switch (data.type){
+            case 'helo':
+                clients[clientId].path = data.path
+            break;
+            case 'command':
+                sendComand.emit('command',data);
+            break;
         }
     });
     ws.onerror = function (){

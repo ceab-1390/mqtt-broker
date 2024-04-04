@@ -41,5 +41,7 @@ router.get('/delUser/:id',midleware.auth,user.deleteUser);
 router.get('/control',midleware.auth,control.index);
 router.get('/controls_data',control.controls_data);
 router.post('/newControl', midleware.auth,control.newControl);
+router.post('/delControl', midleware.auth,control.delControl);
+
 
 module.exports = router

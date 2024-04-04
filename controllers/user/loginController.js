@@ -15,11 +15,13 @@ module.exports.auth = async (req,res) =>{
     let token;
     if (req.body.user != '' && req.body.password != ''){
         try {
-            user = await model.Users.findOne(req.body.user);
+            user = await model.Users.findOne(req.body.user.toLowerCase());
             if (user){
                 let validPass = Bcrypt.compareSync(req.body.password,user.password);
                 validPass ? token = jwt.sign({user:user.username, id:user._id, group: user.group._id}, secretJwt, { expiresIn: '1h' }) : token = false;
                 setCockie(token,user)
+            }else{
+                res.render('login',{status:{error: true, message: "Usuario no existe"}, layout: false})  
             }
             async function setCockie(obj,user){
                 if (!token){
@@ -60,6 +62,7 @@ module.exports.index = async (req,res) =>{
 }
 
 module.exports.createUser = async (req,res) => {
+    req.body.username = req.body.username.toLowerCase();
     const errors = validationResult(req)
     if (req.body.password != req.body.password_v){
         res.cookie('error', "Las contrasenas no coinciden", { httpOnly: true });

@@ -73,7 +73,6 @@ module.exports.delGraf = async (req,res) =>{
     }else{
         res.send({"status":"false"})
     }
-    console.log(del)
     
 }
 

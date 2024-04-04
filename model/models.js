@@ -104,6 +104,7 @@ const controlSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         required: true,
         ref: DeviceModel,
+        unique: true
     },
     buttons: {
         type: Array,
@@ -266,6 +267,16 @@ class Device{
             return false;
         }
     };
+
+    static async findOne(id){
+        try {
+           let found = await DeviceModel.findOne({_id:id});
+           return found 
+        } catch (error) {
+            console.error(new Error(error));
+            return false;
+        }
+    }
 };
 
 class Control{
@@ -290,10 +301,16 @@ class Control{
                     }
                 },
                 {
-                    $project:{
-                        controlInfo: 0
+                    $addFields: {
+                        mac: "$controlInfo.mac"
                     }
-                }
+                },
+                {
+                    $project:{
+                        controlInfo: 0,
+                    }
+                },
+
  
             ]);
             return all;
@@ -319,6 +336,16 @@ class Control{
         } catch (error) {
             console.error(new Error(error));
             return false;
+        }
+    }
+
+    static async deleteOne(id){
+        try {
+            var del = await ControlModel.deleteOne({_id:id});
+            return true;
+        } catch (error) {
+            console.error(new Error(error));    
+            return false        
         }
     }
 };

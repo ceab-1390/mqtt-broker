@@ -1,7 +1,15 @@
 if (window.location.pathname != '/control'){
 
 
-webSocket = new WebSocket('ws://localhost:3001');
+webSocket = new WebSocket('ws://10.42.0.53:3001');
+
+webSocket.onopen = () =>{
+  let data = {};
+  data.type = 'helo';
+  data.path = window.location.pathname;
+  webSocket.send(JSON.stringify(data));
+}
+
 let dona = [];
 let bar = [];
 let line = [];
@@ -12,7 +20,7 @@ charts = {}
 
 async function getData(){
   try {
-    let response = await fetch('http://localhost:3000/charts_data');
+    let response = await fetch('http://10.42.0.53:3000/charts_data');
     let data = await response.json();
     return data
   } catch (error) {
@@ -261,10 +269,10 @@ getData().then((charts)=>{
 
 
 }else{
-  webSocket = new WebSocket('ws://localhost:3001');
+  webSocket = new WebSocket('ws://10.42.0.53:3001');
   async function getData(){
     try {
-      let response = await fetch('http://localhost:3000/controls_data');
+      let response = await fetch('http://10.42.0.53:3000/controls_data');
       let data = await response.json();
       return data
     } catch (error) {
@@ -279,13 +287,16 @@ getData().then(controls => {
     let div3 = [];
     let h2 = [];
     let divButton = [];
-    let theButtons =[];
+    let theButtons = [];
+    let theLabel = [];
+    let theContent = [];
     let buttonDelControl = [];
     let ids = [];
     let index = 0;
 
 
     Object.values(controls).forEach(control => {
+      console.log(control)
         div1[control._id] = document.createElement('div');
         div1[control._id].classList.add('divControlTitle');
         div3[control._id] = document.createElement('div');
@@ -306,14 +317,41 @@ getData().then(controls => {
         buttonDelControl[control._id].onclick = () => deleteControl(control._id);
         divButton[control._id].appendChild(buttonDelControl[control._id]);
         div2[control._id].appendChild(div1[control._id]);
-        control.buttons.forEach(button =>{
-          theButtons[button.button] = document.createElement('button');
-          theButtons[button.button].setAttribute('id',button.action);
-          theButtons[button.button].onclick = function(){ enviarComando(this);}
-          theButtons[button.button].innerHTML = button.button;
-          theButtons[button.button].classList.add('button-control', 'btn-large', 'waves-effect', 'waves-light','btn-floating', 'green')
-          theButtons[button.button].setAttribute('value',control.deviceId)
-          div3[control._id].appendChild(theButtons[button.button]);
+        control.buttons.forEach((button,index) =>{
+          console.log(button)
+          switch (button.type){
+            case 'button':
+              theButtons[button.button] = document.createElement('button');
+              theButtons[button.button].type = 'button';
+              theButtons[button.button].setAttribute('id', control.mac+'_'+(index + 1));
+              theButtons[button.button].onclick = function(){ enviarComando(this,button.action,control.deviceId);}
+              theButtons[button.button].innerHTML = button.button;
+              theButtons[button.button].classList.add('button-control', 'btn-large', 'waves-effect', 'waves-light','btn-floating', 'green')
+              theButtons[button.button].setAttribute('value',button.action)
+              div3[control._id].appendChild(theButtons[button.button]);
+            break;
+            case 'range':
+              theContent[button.button] = document.createElement('div');
+              theContent[button.button].classList.add('button-control','btn-floating', 'green');
+              theButtons[button.button] = document.createElement('input');
+              theButtons[button.button].type = 'range';
+              theButtons[button.button].setAttribute('id', control.mac+'_'+(index + 1));
+              theButtons[button.button].setAttribute('step', '0.1');
+              theButtons[button.button].value = 0;
+              theButtons[button.button].onclick = function(){ enviarComando(this,button.action,control.deviceId);}
+              theButtons[button.button].innerHTML = button.button;
+              theButtons[button.button].classList.add('btnVol');
+              theButtons[button.button].setAttribute('value' ,button.action)
+
+              theLabel[button.button] = document.createElement('label');
+              theLabel[button.button].htmlFor = control.mac+'_'+(index + 1);
+              theLabel[button.button].innerHTML = button.button;
+              theLabel[button.button].classList.add('labelRange');
+              theContent[button.button].appendChild(theButtons[button.button]);
+              theContent[button.button].appendChild(theLabel[button.button]);
+              div3[control._id].appendChild(theContent[button.button]);
+            break;
+          }
         })
         div2[control._id].appendChild(div3[control._id]);
         div2[control._id].appendChild(divButton[control._id]);
@@ -329,44 +367,94 @@ getData().then(controls => {
 function buttonsForControl(){
   let cant = document.getElementById('cant').value;
   let div = document.getElementById('buttons');
+  let divSelect = [];
   div.innerHTML = '';
   for (let i = 1; i <= cant; i++ ){
     console.log(i)
     let input = document.createElement('input');
     input.placeholder = 'Nombre para boton: '+ i
     input.type = 'text';
-    input.name = 'B'+i
+    input.classList.add('col','s6');
+    //input.name = 'B'+i
+    input.name = 'B'
+
+    divSelect[i] = document.createElement('div');
+    divSelect[i].classList.add('col','s5');
+
+    let select = document.createElement('select');
+    //select.name = 'type'+i;
+    select.name = 'T'
+
+    let optionButton = document.createElement('option');
+    optionButton.value = 'button';
+    optionButton.text = 'Button';
+    select.appendChild(optionButton);
+
+    let optionRange = document.createElement('option');
+    optionRange.value = 'range';
+    optionRange.text = 'Range';
+    select.appendChild(optionRange);
+
+    divSelect[i].appendChild(select)
+
+    div.appendChild(divSelect[i]);
     div.appendChild(input);
   }
+  var elems = document.querySelectorAll('select');
+  var instances = M.FormSelect.init(elems, '');
 }
 
+async function deleteControl(id){
+  try {
+    let postData = {
+      id: id
+    }
+    let response = await fetch('http://10.42.0.53:3000/delControl',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json' 
+      },
+      body: JSON.stringify(postData)
+    });
+    let data = await response.json();
+    console.log(data);
+    if (data.status){
+      location.reload()
+    }
+  } catch (error) {
+    console.error(new Error(error));
+  }
+}
+webSocket.onopen = () =>{
+  let data = {};
+  data.type = 'helo';
+  data.path = window.location.pathname;
+  webSocket.send(JSON.stringify(data));
 }
 
-//////////////////////////
+webSocket.onmessage = (event) =>{
+  
+}
+async function buttonStatus(){
 
-var modal = document.getElementById("myModal");
-
-// Obtén el botón que abre el modal
-var btn = document.querySelector(".togle-modal");
-
-// Obtén el elemento <span> que cierra el modal
-var span = document.getElementsByClassName("close")[0];
-
-// Cuando el usuario haga clic en el botón, abre el modal 
-// btn.onclick = function() {
-//  modal.style.display = "block";
-// }
-
-// Cuando el usuario haga clic en <span> (x), cierra el modal
-// span.onclick = function() {
-//  modal.style.display = "none";
-// }
-
-// Cuando el usuario haga clic en cualquier lugar fuera del modal, cierra el modal
-window.onclick = function(event) {
- if (event.target == modal) {
-    modal.style.display = "none";
- }
+}
+function enviarComando(obj,action,deviceId){
+  let command = {}
+  command.type = 'command'
+  command.deviceId = deviceId;
+  command.comand = action;
+  switch (obj.type){
+    case 'range':
+      command.range = true;
+      command.value = obj.value;
+    break;
+    case 'button':
+      command.range = false;
+    break;
+  }
+  webSocket.send(JSON.stringify(command))
+  console.log(command)
+}
 }
 
 
@@ -376,7 +464,7 @@ async function deleteGraf(id){
     let postData = {
       id: id
     }
-    let response = await fetch('http://localhost:3000/delGraf',{
+    let response = await fetch('http://10.42.0.53:3000/delGraf',{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json' 
@@ -409,20 +497,7 @@ function limit(obj){
   }
 }
 
-function enviarComando(obj){
-  console.log(obj.value)
-  let comand = {}
-  comand.type = 'command'
-  comand.deviceId = obj.value;
-  comand.comand = obj.id;
-  webSocket.send(JSON.stringify(comand))
-  console.log(comand)
-}
 
-
-///////Alertas
-
-//////Alertas
 
 document.addEventListener('DOMContentLoaded', function() {
   var elems = document.querySelectorAll('.modal');
